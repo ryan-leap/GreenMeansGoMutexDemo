@@ -229,7 +229,7 @@ function Show-MutexOwnership {
     New-ShapeRectangle -TextEmbed $message -TextAlignHorizontal Left -Height 10
     Add-Content -Path $script:LogPath -Value "[$(Get-Date -Format o)] $message"
     Start-Sleep -Milliseconds $script:ownershipTimeoutMilliseconds
-    $script:ownershipTimeoutMilliseconds -= [Math]::Max(0,$script:ownershipTimeoutDecrementBy)
+    $script:ownershipTimeoutMilliseconds -= $script:ownershipTimeoutDecrementBy
     $message = "Process [$([System.Diagnostics.Process]::GetCurrentProcess().Id)] releasing mutex [$($script:mutex.Name)]."
     Add-Content -Path $script:LogPath -Value "[$(Get-Date -Format o)] $message"
     $script:mutex.ReleaseMutex()
@@ -259,7 +259,7 @@ function Show-MutexOwnershipInWaiting {
 #>
 $hostColor = $host.UI.RawUI.BackgroundColor
 $ownershipTimeoutMilliseconds = $OwnershipTimeout * 1000
-$ownershipTimeoutDecrementBy = [Math]::Round($ownershipTimeoutMilliseconds / $WaitCycleCount)
+$ownershipTimeoutDecrementBy = [Math]::Floor($ownershipTimeoutMilliseconds / $WaitCycleCount)
 $mutex = New-Mutex -Name $MutexName
 if ($mutex.Created) {
     $message = "Process [$([System.Diagnostics.Process]::GetCurrentProcess().Id)] created Mutex [$($mutex.Name)]."
