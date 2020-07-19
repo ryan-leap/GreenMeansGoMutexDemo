@@ -28,7 +28,7 @@ we can create a Mutex object in PowerShell:
 ```powershell
 $mutex = New-Object System.Threading.Mutex($false, $Name, [ref] $createdMutex)
 ```
-and use the methods it provides to wait (`WaitOne`) for exclusive access to a resource and release (`ReleaseMutex`) access of that resource when we're done.
+and use the methods it provides to wait (`WaitOne`) for exclusive access to a resource and release (`ReleaseMutex`) ownership of that resource when we're done.
 
 ## Demo, please.
 
