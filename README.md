@@ -42,7 +42,7 @@ Each PowerShell console will run the same script.  For several passes (all for d
 
 ### The (Common) Log File
 
-Notice separate processes are logging to the same file in a (Mutex) coordinated fashion.
+Notice that in addition to the console color renderings that these same separate processes are writing to a common log file in a coordinated (via Mutex) fashion.
 
 ![Green Means Go Mutex Demo Log File](./images/green_means_go_log_file.png)
 
