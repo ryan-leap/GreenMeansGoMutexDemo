@@ -18,9 +18,7 @@ to resources.  If it were a conversation between the OS and some processes it mi
 ## Why do I care?
 
 More than likely you don't. But, if your script does some Asynchronous-Fu (think [Jobs](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_jobs?view=powershell-7) or [ThreadJobs](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_thread_jobs?view=powershell-7)) and those
-worker-jobs share a log file you're gonna **need** a mutex.  Otherwise those little jobs will be stepping
-on each other - log entries will be missed...exceptions will be thrown...crying and nashing
-of teeth sort-of-thing.
+worker-jobs share a log file you're gonna ***need*** a mutex.  Otherwise those jobs will be stepping on each other - log entries will be missed...exceptions will be thrown...crying and nashing of teeth sort-of-thing.
 
 ## Okay, I'm still here.  How do I use a Mutex in PowerShell?
 
@@ -43,6 +41,8 @@ Each PowerShell console will run the same script.  For several passes (all for d
 ![Green Means Go Mutex Demo Consoles](./images/green_means_go_mutex_demo.gif)
 
 ### The (Common) Log File
+
+Notice separate processes are logging to the same file in a (Mutex) coordinated fashion.
 
 ![Green Means Go Mutex Demo Log File](./images/green_means_go_log_file.png)
 
