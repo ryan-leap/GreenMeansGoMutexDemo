@@ -34,9 +34,11 @@ and use the methods it provides to wait (`WaitOne`) for exclusive access to a re
 
 ### The Setup
 
-Each PowerShell console will run the same script.  For several passes (all for demo purposes) the script will request ownership of a named Mutex and if it gets ownership it will change the console color to Green, log a message (to a shared log file) and hang on to the ownership (by sleeping) for a (progressively shorter) period of time.  If the script does **not** get ownership of the Mutex (because it is owned by another) it will change the console color to Red and wait until ownership is granted.
+Each PowerShell console will run script [`Start-GreenMeansGoMutexDemo.ps1`](./Start-GreenMeansGoMutexDemo.ps1).  For several passes (all for demo purposes) the script will request ownership of a named Mutex and if it gets ownership it will change the console color to Green, log a message (to a shared log file) and hang on to the ownership (by sleeping) for a (progressively shorter) period of time.  If the script does **not** get ownership of the Mutex (because it is owned by another) it will change the console color to Red and wait until ownership is granted.
 
 ### Watch a Mutex in action (<span style="color:green">Green</span> = Owner; <span style="color:red">Red</span> = Waiting for Ownership)
+
+Separate PowerShell consoles (processes) are using a Mutex to coordinate activity:
 
 ![Green Means Go Mutex Demo Consoles](./images/green_means_go_mutex_demo.gif)
 
