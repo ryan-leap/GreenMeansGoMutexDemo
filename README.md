@@ -40,3 +40,7 @@ Each PowerShell console will run the same script.  For several passes (all for d
 ### The (Common) Log File
 
 ![Green Means Go Mutex Demo Log File](./images/green_means_go_log_file.png)
+
+## Conclusion
+
+A Mutex is locking mechanism that allows processes and threads to coordinate access to resources.  You might need it one day - especially if you have scripts that do multi-process (Jobs) or mult-threaded (ThreadJobs) work and require access to the same resource - like a log file.  Enjoy!
