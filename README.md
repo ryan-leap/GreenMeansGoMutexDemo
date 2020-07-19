@@ -27,6 +27,9 @@ of teeth sort-of-thing.
 Because PowerShell is sitting right on top of .NET we can leverage the [System.Threading.Mutex](https://docs.microsoft.com/en-us/dotnet/api/system.threading.mutex?view=netcore-3.1) class.  With that
 we can create a Mutex object in PowerShell and use the methods it provides to wait (`WaitOne()`) for exclusive access to a resource and release (`ReleaseMutex()`) access from that resource when we're done.
 
-## Stop talking.  Show me pictures and flashy stuff.
+## Stop talking.  Demo it.
+
+- Green - Process has been granted exclusive access to the resource
+- Red - Process is waiting to be granted exclusive access to the resource
 
 ![Green Means Go Mutex Demo](./images/green_means_go_mutex_demo.gif)
