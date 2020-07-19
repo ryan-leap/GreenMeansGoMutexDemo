@@ -211,9 +211,7 @@ function New-ShapeRectangle {
 function Show-MutexOwnership {
 <#
 .SYNOPSIS
-    Helper function "Paints" the host with the color specified
-.PARAMETER Color
-    Specifies one of the 16 available console colors
+    Helper function that visually represents mutex ownership
 .NOTES
     Author: Ryan Leap
     Email: ryan.leap@gmail.com
