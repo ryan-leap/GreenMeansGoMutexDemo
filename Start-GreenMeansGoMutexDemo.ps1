@@ -3,8 +3,8 @@
     Provides a visual demonstration of a Mutex
 .PARAMETER MutexName
     The name of the Mutex to create/reference
-.PARAMETER MutexOwnershipTimeoutMilliseconds
-    The number of milliseconds to own the mutex.  The demo will decrease the own time
+.PARAMETER MutexOwnershipTimeoutSeconds
+    The number of seconds to own the mutex.  The demo will decrease the own time
     for display purposes but will start with this value as the time to hold the mutex when owned.
 .PARAMETER HostColorOwning
     The color the host should be painted to indicate the process owns the Mutex
@@ -20,7 +20,8 @@
 param (
     [string] $MutexName = 'GreenMeansGoMutexDemo',
 
-    [int] $MutexOwnershipTimeoutMilliseconds = 2000, 
+    [ValidateRange(1,30)]
+    [int] $MutexOwnershipTimeoutSeconds = 3, 
 
     [ValidateSet('Black', 'DarkBlue', 'DarkGreen', 'DarkCyan','DarkRed', 'DarkMagenta', 'DarkYellow',
     'Gray','DarkGray', 'Blue', 'Green', 'Cyan','Red', 'Magenta', 'Yellow', 'White')]
@@ -222,8 +223,8 @@ function Show-MutexOwnership {
     $message = "Process [$([System.Diagnostics.Process]::GetCurrentProcess().Id)] owns Mutex [$($script:mutex.Name)]. Holding for [$($script:MutexOwnershipTimeoutMilliseconds)] milliseconds..."
     New-ShapeRectangle -TextEmbed $message -TextAlignHorizontal Left -Height 10
     Add-Content -Path $script:LogPath -Value "[$(Get-Date -Format o)] $message"
-    Start-Sleep -Milliseconds $script:MutexOwnershipTimeoutMilliseconds
-    $script:MutexOwnershipTimeoutMilliseconds -= 100
+    Start-Sleep -Milliseconds $script:mutexOwnershipTimeoutMilliseconds
+    $script:mutexOwnershipTimeoutMilliseconds -= 100
     $message = "Process [$([System.Diagnostics.Process]::GetCurrentProcess().Id)] releasing mutex [$($script:mutex.Name)]."
     Add-Content -Path $script:LogPath -Value "[$(Get-Date -Format o)] $message"
     $script:mutex.ReleaseMutex()
@@ -253,6 +254,7 @@ function Show-MutexOwnershipInWaiting {
 
 #>
 $hostColor = $host.UI.RawUI.BackgroundColor
+$mutexOwnershipTimeoutMilliseconds = $MutexOwnershipTimeoutSeconds * 1000
 $mutex = New-Mutex -Name $MutexName
 if ($mutex.Created) {
     $message = "Process [$([System.Diagnostics.Process]::GetCurrentProcess().Id)] created Mutex [$($mutex.Name)]."
