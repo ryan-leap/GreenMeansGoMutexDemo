@@ -231,6 +231,22 @@ function Show-MutexOwnership {
     New-ShapeRectangle -TextEmbed $message -TextAlignHorizontal Left -Height 10
 }
 
+function Show-MutexOwnershipInWaiting {
+    <#
+    .SYNOPSIS
+        Helper function that visually represents waiting for mutex ownership
+    .NOTES
+        Author: Ryan Leap
+        Email: ryan.leap@gmail.com
+    #>
+        param ()
+
+        Update-HostBackgroundColor -color $script:HostColorWaiting
+        $message = "Process [$([System.Diagnostics.Process]::GetCurrentProcess().Id)] waiting for ownership of Mutex [$($script:mutex.Name)]..."
+        New-ShapeRectangle -TextEmbed $message -TextAlignHorizontal Left -Height 10
+
+}
+
 <# 
 
    Main Script
@@ -245,15 +261,12 @@ if ($mutex.Created) {
 
 for ($i = 0; $i -lt 20; $i++) {
     if ($mutex.WaitOne(0)) {
-        # $mutex.ReleaseMutex()
-        # $null = $mutex.WaitOne()
         Show-MutexOwnership
     }
     else {
-        Update-HostBackgroundColor -color $HostColorWaiting
-        $message = "Process [$([System.Diagnostics.Process]::GetCurrentProcess().Id)] waiting for ownership of Mutex [$($mutex.Name)]..."
-        New-ShapeRectangle -TextEmbed $message -TextAlignHorizontal Left -Height 10
         $null = $mutex.WaitOne()
+        Show-MutexOwnershipInWaiting
+        $mutex.WaitOne()
         Show-MutexOwnership
     }
 }
