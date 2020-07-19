@@ -229,7 +229,7 @@ function Show-MutexOwnership {
     New-ShapeRectangle -TextEmbed $message -TextAlignHorizontal Left -Height 10
     Add-Content -Path $script:LogPath -Value "[$(Get-Date -Format o)] $message"
     Start-Sleep -Milliseconds $script:ownershipTimeoutMilliseconds
-    $script:ownershipTimeoutMilliseconds -= $script:ownershipTimeoutDecrementBy
+    $script:ownershipTimeoutMilliseconds -= [Math]::Max(0,$script:ownershipTimeoutDecrementBy)
     $message = "Process [$([System.Diagnostics.Process]::GetCurrentProcess().Id)] releasing mutex [$($script:mutex.Name)]."
     Add-Content -Path $script:LogPath -Value "[$(Get-Date -Format o)] $message"
     $script:mutex.ReleaseMutex()
