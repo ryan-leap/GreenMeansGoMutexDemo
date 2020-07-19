@@ -29,7 +29,26 @@ we can create a Mutex object in PowerShell and use the methods it provides to wa
 
 ## Stop talking.  Demo it.
 
+### The Setup
+
+Each PowerShell console will run the same script which will interact using a named Mutex.  The script will count
+down (progressively faster)
+
+1. Request Mutex ownership
+2. Ownership Granted
+    1. Paint the console Green
+    1. Log a message to a common log file
+    1. Output a message to the console
+    1. Sleep (make others wait for ownership)
+    1. Release ownership of the named Mutex
+3. Ownership **not** Granted
+    1. Paint the console Red
+    2. Wait for ownership of the named Mutex to be granted
+
+
 - Green - Process has been granted exclusive access to the resource
 - Red - Process is waiting to be granted exclusive access to the resource
+
+### The Finish
 
 ![Green Means Go Mutex Demo](./images/green_means_go_mutex_demo.gif)
