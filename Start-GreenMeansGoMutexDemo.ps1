@@ -3,9 +3,11 @@
     Provides a visual demonstration of a Mutex
 .PARAMETER MutexName
     The name of the Mutex to create/reference
-.PARAMETER MutexOwnershipTimeoutSeconds
-    The number of seconds to own the mutex.  The demo will decrease the own time
-    for display purposes but will start with this value as the time to hold the mutex when owned.
+.PARAMETER OwnershipTimeout
+    The number of seconds to hold the mutex when owned.  For demo purposes the ownership time
+    will decrease each pass (wait cycle).
+.PARAMETER WaitCycleCount
+    The number of passes to take for the demo
 .PARAMETER HostColorOwning
     The color the host should be painted to indicate the process owns the Mutex
 .PARAMETER HostColorWaiting
@@ -21,7 +23,10 @@ param (
     [string] $MutexName = 'GreenMeansGoMutexDemo',
 
     [ValidateRange(1,30)]
-    [int] $MutexOwnershipTimeoutSeconds = 3, 
+    [int] $OwnershipTimeout = 3,
+
+    [ValidateRange(3,50)]
+    [int] $WaitCycleCount = 20,
 
     [ValidateSet('Black', 'DarkBlue', 'DarkGreen', 'DarkCyan','DarkRed', 'DarkMagenta', 'DarkYellow',
     'Gray','DarkGray', 'Blue', 'Green', 'Cyan','Red', 'Magenta', 'Yellow', 'White')]
@@ -220,11 +225,11 @@ function Show-MutexOwnership {
     param ()
 
     Update-HostBackgroundColor -color $script:HostColorOwning
-    $message = "Process [$([System.Diagnostics.Process]::GetCurrentProcess().Id)] owns Mutex [$($script:mutex.Name)]. Holding for [$($script:MutexOwnershipTimeoutMilliseconds)] milliseconds..."
+    $message = "Process [$([System.Diagnostics.Process]::GetCurrentProcess().Id)] owns Mutex [$($script:mutex.Name)]. Holding for [$($script:ownershipTimeoutMilliseconds)] milliseconds..."
     New-ShapeRectangle -TextEmbed $message -TextAlignHorizontal Left -Height 10
     Add-Content -Path $script:LogPath -Value "[$(Get-Date -Format o)] $message"
-    Start-Sleep -Milliseconds $script:mutexOwnershipTimeoutMilliseconds
-    $script:mutexOwnershipTimeoutMilliseconds -= 100
+    Start-Sleep -Milliseconds $script:ownershipTimeoutMilliseconds
+    $script:ownershipTimeoutMilliseconds -= $script:ownershipTimeoutDecrementBy
     $message = "Process [$([System.Diagnostics.Process]::GetCurrentProcess().Id)] releasing mutex [$($script:mutex.Name)]."
     Add-Content -Path $script:LogPath -Value "[$(Get-Date -Format o)] $message"
     $script:mutex.ReleaseMutex()
@@ -233,19 +238,18 @@ function Show-MutexOwnership {
 }
 
 function Show-MutexOwnershipInWaiting {
-    <#
-    .SYNOPSIS
-        Helper function that visually represents waiting for mutex ownership
-    .NOTES
-        Author: Ryan Leap
-        Email: ryan.leap@gmail.com
-    #>
-        param ()
+<#
+.SYNOPSIS
+    Helper function that visually represents waiting for mutex ownership
+.NOTES
+    Author: Ryan Leap
+    Email: ryan.leap@gmail.com
+#>
+    param ()
 
-        Update-HostBackgroundColor -color $script:HostColorWaiting
-        $message = "Process [$([System.Diagnostics.Process]::GetCurrentProcess().Id)] waiting for ownership of Mutex [$($script:mutex.Name)]..."
-        New-ShapeRectangle -TextEmbed $message -TextAlignHorizontal Left -Height 10
-
+    Update-HostBackgroundColor -color $script:HostColorWaiting
+    $message = "Process [$([System.Diagnostics.Process]::GetCurrentProcess().Id)] waiting for ownership of Mutex [$($script:mutex.Name)]..."
+    New-ShapeRectangle -TextEmbed $message -TextAlignHorizontal Left -Height 10
 }
 
 <# 
@@ -254,15 +258,16 @@ function Show-MutexOwnershipInWaiting {
 
 #>
 $hostColor = $host.UI.RawUI.BackgroundColor
-$mutexOwnershipTimeoutMilliseconds = $MutexOwnershipTimeoutSeconds * 1000
+$ownershipTimeoutMilliseconds = $OwnershipTimeout * 1000
+$ownershipTimeoutDecrementBy = [Math]::Round($ownershipTimeoutMilliseconds / $WaitCycleCount)
 $mutex = New-Mutex -Name $MutexName
 if ($mutex.Created) {
     $message = "Process [$([System.Diagnostics.Process]::GetCurrentProcess().Id)] created Mutex [$($mutex.Name)]."
     Set-Content -Path $LogPath -Value "[$(Get-Date -Format o)] $message" -ErrorAction Stop
 }
 
-for ($i = 0; $i -lt 20; $i++) {
-    # Calling WaitOne Method with 0 is (an awkward) non-blocking request for ownership
+for ($i = 0; $i -lt $WaitCycleCount; $i++) {
+    # Calling WaitOne Method with 0 is non-blocking request for ownership
     if ($mutex.WaitOne(0)) {
         Show-MutexOwnership
     }
