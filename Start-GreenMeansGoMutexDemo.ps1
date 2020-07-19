@@ -264,9 +264,8 @@ for ($i = 0; $i -lt 20; $i++) {
         Show-MutexOwnership
     }
     else {
-        $null = $mutex.WaitOne()
         Show-MutexOwnershipInWaiting
-        $mutex.WaitOne()
+        $null = $mutex.WaitOne()
         Show-MutexOwnership
     }
 }
