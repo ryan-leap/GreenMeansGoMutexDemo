@@ -245,8 +245,8 @@ if ($mutex.Created) {
 
 for ($i = 0; $i -lt 20; $i++) {
     if ($mutex.WaitOne(0)) {
-        $mutex.ReleaseMutex()
-        $null = $mutex.WaitOne()
+        # $mutex.ReleaseMutex()
+        # $null = $mutex.WaitOne()
         Show-MutexOwnership
     }
     else {
