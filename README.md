@@ -46,9 +46,6 @@ down (progressively faster)
     2. Wait for ownership of the named Mutex to be granted
 
 
-- Green - Process has been granted exclusive access to the resource
-- Red - Process is waiting to be granted exclusive access to the resource
-
 ### The Finish
 
 ![Green Means Go Mutex Demo](./images/green_means_go_mutex_demo.gif)
