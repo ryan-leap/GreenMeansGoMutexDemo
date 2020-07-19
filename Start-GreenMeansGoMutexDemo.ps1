@@ -262,6 +262,7 @@ if ($mutex.Created) {
 }
 
 for ($i = 0; $i -lt 20; $i++) {
+    # Calling WaitOne Method with 0 is (an awkward) non-blocking request for ownership
     if ($mutex.WaitOne(0)) {
         Show-MutexOwnership
     }
